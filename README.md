@@ -45,6 +45,81 @@ The summarization service is powered by [3MinTop](https://3min.top), an AI-power
 - Use `pnpm run dev` to start the TypeScript compiler in watch mode
 - Modify `src/index.ts` to customize server behavior or add new tools
 
+## GitHub Codespaces Setup
+
+This project includes a fully configured GitHub Codespaces development environment.
+
+### Quick Start
+
+1. Click **Code** > **Codespaces** > **Create codespace on main**
+2. Wait for the container to build (this may take a few minutes on first run)
+3. The project will automatically:
+   - Install all dependencies via pnpm
+   - Build the TypeScript project
+   - Configure VS Code extensions
+
+### Environment Variables
+
+Before running the server, you need to set up your Google AI API key:
+
+1. Go to [Google AI Studio](https://ai.google.dev/) and get your API key
+2. In your repository, navigate to **Settings** > **Secrets and variables** > **Codespaces**
+3. Click **New repository secret**
+4. Name: `GOOGLE_GENERATIVE_AI_API_KEY`
+5. Value: Your Google AI API key
+6. Click **Add secret**
+
+The validation script will check that this environment variable is set before starting the server.
+
+### Running in Codespaces
+
+```bash
+# Validate environment (checks API key)
+pnpm run validate-env
+
+# Development mode (watch + run)
+pnpm run dev    # Terminal 1: Watch for changes
+pnpm start      # Terminal 2: Start the server
+
+# Or build and start in one command
+pnpm run dev:full
+```
+
+### Testing with MCP Inspector
+
+The [MCP Inspector](https://github.com/modelcontextprotocol/inspector) is a visual tool for testing MCP servers:
+
+```bash
+npx @modelcontextprotocol/inspector node dist/index.js
+```
+
+This will launch a web interface where you can test the `summarize` tool and `greeting` resource.
+
+### VS Code Integration
+
+The Codespace comes pre-configured with:
+
+- **Tasks** (Ctrl/Cmd + Shift + B):
+  - Build: Compile TypeScript
+  - Watch: Watch for changes and recompile
+  - Start Server: Build and start the MCP server
+  - Validate Environment: Check required secrets
+
+- **Debug Configuration** (F5):
+  - Run MCP Server: Launch the server with debugger attached
+
+### Troubleshooting
+
+**Server won't start:**
+- Verify `GOOGLE_GENERATIVE_AI_API_KEY` is set in Codespaces secrets
+- Check the build completed: `ls -la dist/index.js`
+- Run validation manually: `pnpm run validate-env`
+
+**Build errors:**
+- Clean rebuild: `rm -rf dist && pnpm run build`
+- Check Node.js version: `node --version` (should be 20+)
+- Ensure dependencies installed: `pnpm install`
+
 ## Usage with Desktop App
 
 To integrate this server with a desktop app, add the following to your app's server configuration:

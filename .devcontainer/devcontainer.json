@@ -1,0 +1,24 @@
+{
+  "name": "mcp-summarizer Codespace",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts",
+      "pnpm": "latest"
+    }
+  },
+  "postCreateCommand": "pnpm install",
+  "postAttachCommand": "pnpm run build",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-typescript",
+        "esbenp.prettier-vscode"
+      ],
+      "settings": {
+        "typescript.tsdk": "node_modules/typescript/lib",
+        "editor.formatOnSave": true
+      }
+    }
+  }
+}

@@ -15,7 +15,10 @@
 	"scripts": {
 		"dev": "tsc --watch",
 		"build": "tsc",
-		"start": "node ./dist/index.js"
+		"start": "node ./dist/index.js",
+		"validate-env": "node scripts/validate-env.js",
+		"prestart": "pnpm run validate-env",
+		"dev:full": "tsc && node ./dist/index.js"
 	},
 	"dependencies": {
 		"@ai-sdk/google": "^1.1.17",
