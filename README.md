@@ -1,338 +1,262 @@
-# Personal MCP Server
+# Open MCP Server
 
-A comprehensive Model Context Protocol (MCP) server that provides 15+ tools across 4 categories for daily development tasks. Features file operations, web/API tools, developer utilities, and AI-powered summarization.
+A modular Model Context Protocol (MCP) server with **Prompts**, **Skills**, and **Workflows** for personal productivity automation.
 
 ## Features
 
-- **File & Code Tools**: Read, write, list, and search files with glob patterns
-- **Web & API Tools**: Fetch URLs and scrape HTML content
-- **Developer Tools**: Git operations, system info, and time utilities
-- **AI Tools**: Text summarization using Google's Gemini 1.5 Pro
-- **Security**: Path validation with allowed directories whitelist
-- **Resources**: Dynamic greetings and server information
+### Core Components
+- **6 Prompt Templates** - Reusable, parameterizable prompts for common tasks
+- **11 Skills** - Pre-defined task sequences that compose multiple tools
+- **9 Workflows** - Multi-step automation pipelines with conditionals and loops
+- **15+ Tools** - File operations, web scraping, git operations, system info, and AI summarization
 
-## Getting Started
+### Categories
+- **Productivity**: Daily planning, task prioritization, briefings
+- **Development**: Code review, project setup, refactoring guidance
+- **Research**: Topic exploration, document summarization
+- **Document**: File analysis, text summarization, word counting
 
-1. Clone this repository
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+## Quick Start
 
-3. Build the project:
-   ```bash
-   npm run build
-   ```
+```bash
+# Install dependencies
+npm install
 
-4. Start the server:
-   ```bash
-   npm start
-   ```
+# Build the project
+npm run build
 
-### Configuration
+# Start the server
+npm start
+```
 
-You can specify allowed directories as command-line arguments:
+## Server Resources
 
+| Resource | Description |
+|----------|-------------|
+| `prompts://` | List all prompt templates |
+| `prompt://{id}` | Get specific prompt template |
+| `skills://` | List all available skills |
+| `skill://{id}` | Get specific skill details |
+| `workflows://` | List all workflows |
+| `workflow://{id}` | Get specific workflow details |
+| `server-info://` | Server statistics and capabilities |
+
+## Available Tools
+
+### Prompt Management
+- `list_prompts` - List all prompts (optional category filter)
+- `search_prompts` - Search prompts by query string
+- `get_prompt` - Get prompt template with parameters
+- `render_prompt` - Render a prompt with parameters
+- `validate_prompt` - Validate prompt parameters
+- `get_prompt_categories` - List all prompt categories
+
+### Skills (as Tools)
+- `summarize_document` - Read and summarize a file
+- `analyze_text` - Read and analyze text
+- `setup_project` - Initialize a new project
+- `daily_briefing` - Get daily productivity briefing
+- `project_status` - Get project status report
+- And 6 more...
+
+### Workflow Execution
+- `execute_workflow` - Execute a workflow by ID with variables
+
+### Original Tools
+- **File**: `read_file`, `write_file`, `list_directory`, `search_files`
+- **Web**: `fetch_url`, `scrape_html`
+- **Dev**: `git_status`, `git_log`, `git_diff`, `system_info`, `get_time`
+- **AI**: `summarize`
+
+## Configuration
+
+### Command-line Arguments
 ```bash
 node dist/index.js /path/to/workspace /home/user/documents
 ```
 
-Without arguments, file tools will allow access to all paths (for development).
+### Environment Variables
+- `GOOGLE_GENERATIVE_AI_API_KEY` - Required for AI summarization features
 
-## Available Tools
+## Usage with Conductor
 
-### File & Code Tools
+Add this MCP server to Conductor:
 
-#### read_file
-Read file contents with encoding support.
-
-**Parameters:**
-- `path` (string, required): File path to read
-- `encoding` (string, optional): "utf8" | "utf-16le" | "latin1" (default: "utf8")
-
-**Example:**
-```json
-{
-  "path": "/path/to/file.txt",
-  "encoding": "utf8"
-}
+```bash
+claude mcp add open-mcp -s user -- node /Users/sdluffy/conductor/workspaces/playground/san-jose/open-mcp/dist/index.js
 ```
 
-#### write_file
-Create or overwrite files.
-
-**Parameters:**
-- `path` (string, required): File path to write
-- `content` (string, required): Content to write
-- `encoding` (string, optional): "utf8" | "utf-16le" | "latin1" (default: "utf8")
-- `createDirectories` (boolean, optional): Auto-create parent directories (default: false)
-
-**Example:**
-```json
-{
-  "path": "/path/to/file.txt",
-  "content": "Hello, World!",
-  "createDirectories": true
-}
-```
-
-#### list_directory
-List files and directories.
-
-**Parameters:**
-- `path` (string, required): Directory path to list
-- `includeHidden` (boolean, optional): Include hidden files (default: false)
-- `recursive` (boolean, optional): List recursively (default: false)
-
-**Example:**
-```json
-{
-  "path": "/path/to/dir",
-  "includeHidden": false,
-  "recursive": true
-}
-```
-
-#### search_files
-Search files using glob patterns.
-
-**Parameters:**
-- `path` (string, required): Root search path
-- `pattern` (string, required): Glob pattern (e.g., "*.ts", "**/*.js")
-- `excludePatterns` (array, optional): Patterns to exclude
-
-**Example:**
-```json
-{
-  "path": "/src",
-  "pattern": "**/*.ts",
-  "excludePatterns": ["**/node_modules/**", "**/dist/**"]
-}
-```
-
-### Web & API Tools
-
-#### fetch_url
-Make HTTP requests to URLs.
-
-**Parameters:**
-- `url` (string, required): URL to fetch
-- `method` (string, optional): "GET" | "POST" | "PUT" | "DELETE" | "PATCH" (default: "GET")
-- `headers` (object, optional): HTTP headers
-- `body` (string, optional): Request body
-- `timeout` (number, optional): Timeout in milliseconds (default: 30000)
-- `followRedirects` (boolean, optional): Follow HTTP redirects (default: true)
-
-**Example:**
-```json
-{
-  "url": "https://api.example.com/data",
-  "method": "GET",
-  "headers": {
-    "Authorization": "Bearer token"
-  },
-  "timeout": 10000
-}
-```
-
-#### scrape_html
-Extract content from HTML pages.
-
-**Parameters:**
-- `url` (string, required): URL to scrape
-- `extractText` (boolean, optional): Extract text content (default: true)
-- `extractLinks` (boolean, optional): Extract links (default: false)
-- `extractImages` (boolean, optional): Extract images (default: false)
-
-**Example:**
-```json
-{
-  "url": "https://example.com",
-  "extractText": true,
-  "extractLinks": true,
-  "extractImages": true
-}
-```
-
-### Developer Tools
-
-#### git_status
-Get git repository status.
-
-**Parameters:**
-- `path` (string, optional): Repository path (default: ".")
-
-**Example:**
-```json
-{
-  "path": "."
-}
-```
-
-#### git_log
-Get git commit history.
-
-**Parameters:**
-- `path` (string, optional): Repository path (default: ".")
-- `maxCount` (number, optional): Maximum commits to return (default: 10)
-
-**Example:**
-```json
-{
-  "path": ".",
-  "maxCount": 20
-}
-```
-
-#### git_diff
-Get git diff output.
-
-**Parameters:**
-- `path` (string, optional): Repository path (default: ".")
-- `cached` (boolean, optional): Show staged changes (default: false)
-
-**Example:**
-```json
-{
-  "path": ".",
-  "cached": false
-}
-```
-
-#### system_info
-Get system information.
-
-**Parameters:**
-- `include` (array, optional): Categories to include: "platform" | "memory" | "cpu" | "uptime"
-
-**Example:**
-```json
-{
-  "include": ["platform", "memory", "cpu"]
-}
-```
-
-#### get_time
-Get current time with timezone support.
-
-**Parameters:**
-- `timezone` (string, optional): Timezone (e.g., "America/New_York")
-- `format` (string, optional): "iso" | "unix" | "locale" (default: "iso")
-
-**Example:**
-```json
-{
-  "timezone": "America/New_York",
-  "format": "locale"
-}
-```
-
-### AI Tools
-
-#### summarize
-Summarize text using Google's Gemini 1.5 Pro.
-
-**Parameters:**
-- `text` (string, required): Text to summarize
-- `maxLength` (number, optional): Maximum summary length in characters (default: 200)
-- `language` (string, optional): Target language (default: "en")
-
-**Example:**
-```json
-{
-  "text": "Long text to summarize...",
-  "maxLength": 100,
-  "language": "en"
-}
-```
-
-**Note:** Requires `GOOGLE_GENERATIVE_AI_API_KEY` environment variable. Get your key at https://ai.google.dev/
-
-## Resources
-
-### greeting
-Dynamic greeting resource.
-- URI format: `greeting://{name}`
-- Returns: Personalized greeting message
-
-### server-info
-Server information and capabilities.
-- URI format: `server-info://`
-- Returns: Server version, allowed directories, and available tools
-
-## Usage with Claude Desktop
-
-To integrate this server with Claude Desktop, add the following to your Claude Desktop config:
-
-**On macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
-**On Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+Or add to your `conductor.json`:
 
 ```json
 {
   "mcpServers": {
-    "personal-assistant": {
+    "open-mcp": {
       "command": "node",
-      "args": [
-        "/absolute/path/to/personal-mcp-server/dist/index.js",
-        "/Users/yourname/workspace",
-        "/Users/yourname/documents"
-      ],
-      "env": {
-        "GOOGLE_GENERATIVE_AI_API_KEY": "your-api-key-here"
-      }
+      "args": ["/Users/sdluffy/conductor/workspaces/playground/san-jose/open-mcp/dist/index.js"]
     }
   }
 }
 ```
 
-Replace the paths with your actual directories and API key.
+## Project Structure
+
+```
+open-mcp/
+├── src/
+│   ├── index.ts                 # Main entry point
+│   ├── core/                    # Core engines
+│   │   ├── prompt-manager.ts    # Prompt template management
+│   │   ├── skill-executor.ts    # Skill execution engine
+│   │   ├── workflow-engine.ts   # Workflow engine with conditionals
+│   │   └── registry.ts          # Central component registry
+│   ├── prompts/                 # Prompt templates (YAML)
+│   │   ├── productivity/
+│   │   ├── code/
+│   │   └── research/
+│   ├── skills/                  # Skill definitions
+│   │   ├── categories/
+│   │   │   ├── document.ts
+│   │   │   ├── development.ts
+│   │   │   └── productivity.ts
+│   │   └── skills.ts            # Skill registry
+│   ├── workflows/               # Workflow definitions
+│   │   ├── definitions/
+│   │   │   ├── daily-routine.ts
+│   │   │   ├── code-review.ts
+│   │   │   └── project-setup.ts
+│   │   └── workflows.ts         # Workflow registry
+│   ├── tools/                   # Original tools
+│   ├── types/                   # TypeScript definitions
+│   └── utils/                   # Utilities
+└── prompts/                     # YAML prompt templates
+```
+
+## Forked Dependencies
+
+We maintain forks of key dependencies for customization:
+
+| Repository | Fork | Purpose |
+|------------|------|---------|
+| [@modelcontextprotocol/typescript-sdk](https://github.com/modelcontextprotocol/typescript-sdk) | [ishuru/typescript-sdk](https://github.com/ishuru/typescript-sdk) | MCP SDK modifications |
+| [openai/openai-openapi](https://github.com/openai/openai-openapi) | [ishuru/openai-openapi](https://github.com/ishuru/openai-openapi) | OpenAI API spec |
+
+### Contributing to Forks
+
+1. Make changes in your fork
+2. Open a PR to the upstream repository
+3. Reference the open-mcp issue you're solving
 
 ## Development
 
-- Use `npm run dev` to start the TypeScript compiler in watch mode
-- Modify files in `src/tools/` to add or customize tools
-- Add new tool categories by creating new files in `src/tools/`
-
-### Project Structure
-
-```
-src/
-├── index.ts                 # Main entry point
-├── tools/
-│   ├── file-tools.ts        # File operations
-│   ├── web-tools.ts         # Web/API tools
-│   ├── dev-tools.ts         # Developer tools
-│   └── summarize-tool.ts    # AI summarization
-├── utils/
-│   ├── path-validation.ts   # Security utilities
-│   └── error-handling.ts    # Error handling
-```
-
-## Testing with MCP Inspector
-
-The [MCP Inspector](https://github.com/modelcontextprotocol/inspector) is a visual tool for testing MCP servers:
-
 ```bash
-npx @modelcontextprotocol/inspector node dist/index.js /allowed/path
+# Watch mode
+npm run dev
+
+# Build
+npm run build
+
+# Run with output
+npm run dev:full
+```
+
+### Adding New Prompts
+
+Create a YAML file in `prompts/{category}/`:
+
+```yaml
+id: my_prompt
+name: My Prompt
+description: Description
+category: productivity
+template: |
+  Your template here with {{variables}}
+parameters:
+  - name: variable
+    type: string
+    required: true
+```
+
+### Adding New Skills
+
+Create a skill in `src/skills/categories/{category}.ts`:
+
+```typescript
+export const mySkill: Skill = {
+  id: "my_skill",
+  name: "My Skill",
+  description: "Description",
+  category: "my_category",
+  tools: [
+    { tool: "tool_name", parameters: {...} }
+  ],
+  inputSchema: { type: "object", properties: {...} },
+  outputSchema: { type: "object", properties: {...} }
+};
+```
+
+### Adding New Workflows
+
+Create a workflow in `src/workflows/definitions/{name}.ts`:
+
+```typescript
+export const myWorkflow: Workflow = {
+  id: "my_workflow",
+  name: "My Workflow",
+  description: "Description",
+  steps: [
+    { id: "step1", type: "tool", name: "Step 1", config: {...} }
+  ]
+};
+```
+
+## Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                         MCP Client (Claude)                     │
+└─────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                      MCP Server (stdio)                         │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │                    Tool Registry                          │  │
+│  │  ┌───────────┐ ┌───────────┐ ┌─────────────────────┐     │  │
+│  │  │  Prompts  │ │  Skills   │ │     Workflows       │     │  │
+│  │  │ (Resource)│ │  (Tools)  │ │      (Tools)        │     │  │
+│  │  └─────┬─────┘ └─────┬─────┘ └──────────┬──────────┘     │  │
+│  └────────┼─────────────┼──────────────────┼─────────────────┘  │
+│           │             │                  │                      │
+│  ┌────────┼─────────────┼──────────────────┼─────────────────┐  │
+│  │        ▼             ▼                  ▼                  │  │
+│  │  ┌─────────┐ ┌─────────────┐ ┌──────────────────┐        │  │
+│  │  │ Prompt  │ │   Skill     │ │   Workflow       │        │  │
+│  │  │ Manager │ │  Executor   │ │    Engine        │        │  │
+│  │  └────┬────┘ └──────┬──────┘ └────────┬─────────┘        │  │
+│  │       │              │                  │                  │  │
+│  │       ▼              ▼                  ▼                  │  │
+│  │  ┌─────────────────────────────────────────────────┐     │  │
+│  │  │            Existing Tools                       │     │  │
+│  │  │  file-tools | web-tools | dev-tools | ai-tools │     │  │
+│  │  └─────────────────────────────────────────────────┘     │  │
+│  └───────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ## Security
 
-- File operations validate paths against allowed directories whitelist
-- Command injection prevention through argument arrays
+- Path validation with allowed directories whitelist
+- Command injection prevention
 - Timeout protection on HTTP requests
-- No directory traversal attacks possible
-
-**Important:** Always specify allowed directories when running the server in production:
-
-```bash
-node dist/index.js /safe/workspace/directory
-```
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+- Directory traversal attack prevention
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - see [LICENSE](LICENSE) for details
+
+## Links
+
+- [MCP Specification](https://modelcontextprotocol.io)
+- [Conductor Documentation](https://docs.conductor.build)
+- [GitHub Repository](https://github.com/ishuru/open-mcp)
