@@ -1,0 +1,90 @@
+id: summarizer
+name: Text Summarizer
+description: Generate a concise summary of text with key points
+category: research
+template: |
+  Summarize the following text:
+
+  {{#if maxLength}}
+  Target length: {{maxLength}} words
+  {{/if}}
+
+  {{#if style}}
+  Summary style: {{style}}
+  {{/if}}
+
+  Text:
+  {{#if text}}
+  {{{text}}}
+  {{else}}
+  {{{content}}}
+  {{/if}}
+
+  Provide:
+
+  1. **One-sentence summary** - A single sentence capturing the main idea
+
+  2. **Key points** - 3-5 bullet points of the most important information
+
+  3. **Main takeaway** - The core message or conclusion
+
+  {{#if includeDetails}}
+  4. **Supporting details** - Important context and supporting information
+  {{/if}}
+
+  {{#if style}}
+  Make the summary {{style}} in tone and structure.
+  {{/if}}
+parameters:
+  - name: text
+    type: string
+    description: The text to summarize
+    required: false
+  - name: content
+    type: string
+    description: Alternative parameter for text content
+    required: false
+  - name: maxLength
+    type: number
+    description: Maximum length in words
+    required: false
+    default: 200
+  - name: style
+    type: string
+    description: Summary style (concise/detailed/technical/executive)
+    required: false
+    default: concise
+  - name: includeDetails
+    type: boolean
+    description: Include supporting details section
+    required: false
+    default: false
+examples:
+  - inputs:
+      text: |
+        Artificial intelligence has transformed many industries in recent years.
+        Machine learning algorithms now power everything from recommendation systems
+        to autonomous vehicles. Companies are investing billions in AI research and
+        development. However, concerns about AI safety and ethics have grown alongside
+        these advancements. Researchers emphasize the need for responsible AI development
+        that considers bias, fairness, and transparency.
+      style: concise
+      maxLength: 50
+    output: |
+      One-sentence summary:
+      AI is transforming industries through machine learning, raising both investment
+      and ethical concerns.
+
+      Key points:
+      - Machine learning powers recommendation systems and autonomous vehicles
+      - Companies invest billions in AI R&D
+      - Growing concerns about AI safety, bias, and ethics
+      - Researchers call for responsible AI development
+
+      Main takeaway:
+      The rapid advancement of AI technology necessitates a balanced approach that
+      pursues innovation while addressing ethical considerations.
+tags:
+  - summarization
+  - research
+  - analysis

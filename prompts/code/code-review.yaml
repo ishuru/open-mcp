@@ -1,0 +1,111 @@
+id: code_review
+name: Code Review Guide
+description: Generate a comprehensive code review checklist and analysis
+category: code
+template: |
+  Perform a code review for the following {{#if language}}{{language}}{{else}}code{{/if}} code:
+
+  ```
+  {{{code}}}
+  {{#if diff}}
+  Diff:
+  {{{diff}}}
+  {{/if}}
+  ```
+
+  {{#if focus}}
+  Focus Areas: {{focus}}
+  {{/if}}
+
+  Provide a review covering:
+
+  1. **Code Quality**
+     - Readability and clarity
+     - Naming conventions
+     - Code structure and organization
+
+  2. **Correctness**
+     - Potential bugs or edge cases
+     - Logic errors
+     - Error handling
+
+  3. **Best Practices**
+     - Language-specific best practices
+     - Design patterns
+     - SOLID principles adherence
+
+  4. **Performance**
+     - Performance concerns
+     - Optimization opportunities
+
+  5. **Security**
+     - Security vulnerabilities
+     - Input validation
+     - Data handling
+
+  6. **Testing**
+     - Test coverage suggestions
+     - Edge cases to test
+
+  Format the review with specific line references and actionable feedback.
+parameters:
+  - name: code
+    type: string
+    description: The code to review
+    required: true
+  - name: language
+    type: string
+    description: Programming language
+    required: false
+  - name: diff
+    type: string
+    description: Git diff if reviewing changes
+    required: false
+  - name: focus
+    type: string
+    description: Specific areas to focus on
+    required: false
+examples:
+  - inputs:
+      code: |
+        function processUser(user) {
+          if (user.name) {
+            db.save(user)
+          }
+        }
+      language: javascript
+      focus: error handling and validation
+    output: |
+      Code Review: processUser function
+
+      1. CORRECTNESS (Critical)
+      - Line 3: Missing error handling for db.save()
+      - Line 2: No validation that user.name is a string
+      - No validation of user object structure
+
+      2. SECURITY (High)
+      - No sanitization of user data before saving
+      - Potential for injection attacks
+
+      3. BEST PRACTIES
+      - Add JSDoc documentation
+      - Use async/await for database operations
+      - Validate input schema
+
+      Recommended fixes:
+      ```javascript
+      async function processUser(user) {
+         if (!user || typeof user.name !== 'string') {
+           throw new Error('Invalid user input');
+         }
+         try {
+           await db.save(user);
+         } catch (error) {
+           // Handle error appropriately
+         }
+      }
+      ```
+tags:
+  - code-review
+  - quality
+  - best-practices

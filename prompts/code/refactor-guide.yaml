@@ -1,0 +1,61 @@
+id: refactor_guide
+name: Refactoring Guide
+description: Generate refactoring suggestions for code improvement
+category: code
+template: |
+  Analyze the following {{#if language}}{{language}}{{else}}code{{/if}} code and suggest refactoring improvements:
+
+  ```
+  {{{code}}}
+  ```
+
+  {{#if goals}}
+  Refactoring Goals: {{goals}}
+  {{/if}}
+
+  {{#if constraints}}
+  Constraints: {{constraints}}
+  {{/if}}
+
+  Provide:
+
+  1. **Code Smells Detected**
+     - List identified code smells
+     - Explain why each is problematic
+
+  2. **Refactoring Suggestions**
+     - Specific improvements with before/after code
+     - Rationale for each change
+     - Priority level (High/Medium/Low)
+
+  3. **Design Patterns**
+     - Applicable design patterns
+     - Benefits of applying them
+
+  4. **Step-by-Step Refactoring Plan**
+     - Ordered list of changes to make
+     - Dependencies between changes
+     - Testing strategy for each step
+
+  Focus on making the code more maintainable, readable, and efficient.
+parameters:
+  - name: code
+    type: string
+    description: The code to refactor
+    required: true
+  - name: language
+    type: string
+    description: Programming language
+    required: false
+  - name: goals
+    type: string
+    description: Specific refactoring goals
+    required: false
+  - name: constraints
+    type: string
+    description: Any constraints to consider
+    required: false
+tags:
+  - refactoring
+  - code-quality
+  - maintainability

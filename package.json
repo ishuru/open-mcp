@@ -1,10 +1,11 @@
 {
-	"name": "mcp-summarizer",
-	"version": "1.0.0-alpha.2",
-	"description": "A MCP server for summarizing text",
+	"name": "open-mcp",
+	"version": "3.0.0",
+	"type": "module",
+	"description": "A modular MCP server with prompts, skills, and workflows for personal productivity",
 	"main": "dist/index.js",
 	"bin": {
-		"mcp-summarizer": "./dist/index.js"
+		"open-mcp": "./dist/index.js"
 	},
 	"maintainers": [
 		{
@@ -24,9 +25,15 @@
 		"@ai-sdk/google": "^1.1.17",
 		"@modelcontextprotocol/sdk": "^1.6.0",
 		"ai": "^4.1.46",
+		"handlebars": "^4.7.8",
+		"js-yaml": "^4.1.0",
+		"lodash": "^4.17.21",
+		"minimatch": "^10.0.0",
 		"zod": "^3.24.2"
 	},
 	"devDependencies": {
+		"@types/js-yaml": "^4.0.9",
+		"@types/lodash": "^4.17.13",
 		"@types/node": "^22.9.3",
 		"typescript": "^5.6.2"
 	}

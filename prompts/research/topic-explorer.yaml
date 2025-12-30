@@ -1,0 +1,96 @@
+id: topic_explorer
+name: Topic Explorer
+description: Generate a comprehensive research framework for exploring a topic
+category: research
+template: |
+  Create a research framework for exploring: {{topic}}
+
+  {{#if focus}}
+  Focus Area: {{focus}}
+  {{/if}}
+
+  {{#if depth}}
+  Research Depth: {{depth}}
+  {{/if}}
+
+  Provide:
+
+  1. **Research Questions**
+     - Primary questions to answer
+     - Secondary questions for deeper understanding
+
+  2. **Key Concepts & Terminology**
+     - Essential terms and definitions
+     - Related concepts to explore
+
+  3. **Information Sources**
+     - Types of sources to consult
+     - Search strategies
+     - Keywords for research
+
+  4. **Research Structure**
+     - Suggested outline for organizing findings
+     - How to structure the research
+
+  5. **Credibility Indicators**
+     - How to evaluate source credibility
+     - Red flags to watch for
+
+  6. **Next Steps**
+     - Actionable first steps
+     - How to begin the research process
+parameters:
+  - name: topic
+    type: string
+    description: The topic to research
+    required: true
+  - name: focus
+    type: string
+    description: Specific aspect to focus on
+    required: false
+  - name: depth
+    type: string
+    description: Research depth level (overview/deep/expert)
+    required: false
+    default: overview
+examples:
+  - inputs:
+      topic: Quantum Computing Applications in Cryptography
+      focus: Post-quantum cryptographic algorithms
+      depth: deep
+    output: |
+      Research Framework: Quantum Computing in Cryptography
+
+      1. RESEARCH QUESTIONS
+      Primary:
+      - How does quantum computing threaten current cryptographic systems?
+      - What post-quantum algorithms exist?
+
+      Secondary:
+      - Timeline for quantum advantage in cryptanalysis
+      - Migration strategies for existing systems
+
+      2. KEY CONCEPTS
+      - Quantum Supremacy/Advantage
+      - Shor's Algorithm
+      - Lattice-based cryptography
+      - NIST Post-Quantum Standardization
+
+      3. INFORMATION SOURCES
+      - NIST PQC Standardization Project
+      - Academic papers on arXiv
+      - IETF Crypto Forum Research Group
+      - Conference proceedings (CRYPTO, EUROCRYPT)
+
+      4. SEARCH STRATEGY
+      Keywords: "post-quantum cryptography", "lattice-based encryption",
+      "quantum-resistant algorithms"
+
+      5. NEXT STEPS
+      - Start with NIST PQC draft standards
+      - Review IBM Quantum's research blog
+      - Consult academic surveys on PQC
+tags:
+  - research
+  - learning
+  - exploration

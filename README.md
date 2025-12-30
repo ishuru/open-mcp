@@ -1,183 +1,333 @@
-# MCP Content Summarizer Server
+# Personal MCP Server
 
-A Model Context Protocol (MCP) server that provides intelligent summarization capabilities for various types of content using Google's Gemini 1.5 Pro model. This server can help you generate concise summaries while maintaining key information from different content formats.
-
-<a href="https://3min.top"><img width="380" height="200" src="/public/imgs/section1_en.jpg" alt="MCP Content Summarizer Server" /></a>
-
-## Powered by 3MinTop
-
-The summarization service is powered by [3MinTop](https://3min.top), an AI-powered reading tool that helps you understand a chapter's content in just three minutes. 3MinTop transforms complex content into clear summaries, making learning efficient and helping build lasting reading habits.
+A comprehensive Model Context Protocol (MCP) server that provides 15+ tools across 4 categories for daily development tasks. Features file operations, web/API tools, developer utilities, and AI-powered summarization.
 
 ## Features
 
-- Universal content summarization using Google's Gemini 1.5 Pro model
-- Support for multiple content types:
-  - Plain text
-  - Web pages
-  - PDF documents
-  - EPUB books
-  - HTML content
-- Customizable summary length
-- Multi-language support
-- Smart context preservation
-- Dynamic greeting resource for testing
+- **File & Code Tools**: Read, write, list, and search files with glob patterns
+- **Web & API Tools**: Fetch URLs and scrape HTML content
+- **Developer Tools**: Git operations, system info, and time utilities
+- **AI Tools**: Text summarization using Google's Gemini 1.5 Pro
+- **Security**: Path validation with allowed directories whitelist
+- **Resources**: Dynamic greetings and server information
 
 ## Getting Started
 
 1. Clone this repository
 2. Install dependencies:
-   ```
-   pnpm install
+   ```bash
+   npm install
    ```
 
 3. Build the project:
-   ```
-   pnpm run build
+   ```bash
+   npm run build
    ```
 
 4. Start the server:
+   ```bash
+   npm start
    ```
-   pnpm start
-   ```
 
-## Development
+### Configuration
 
-- Use `pnpm run dev` to start the TypeScript compiler in watch mode
-- Modify `src/index.ts` to customize server behavior or add new tools
-
-## GitHub Codespaces Setup
-
-This project includes a fully configured GitHub Codespaces development environment.
-
-### Quick Start
-
-1. Click **Code** > **Codespaces** > **Create codespace on main**
-2. Wait for the container to build (this may take a few minutes on first run)
-3. The project will automatically:
-   - Install all dependencies via pnpm
-   - Build the TypeScript project
-   - Configure VS Code extensions
-
-### Environment Variables
-
-Before running the server, you need to set up your Google AI API key:
-
-1. Go to [Google AI Studio](https://ai.google.dev/) and get your API key
-2. In your repository, navigate to **Settings** > **Secrets and variables** > **Codespaces**
-3. Click **New repository secret**
-4. Name: `GOOGLE_GENERATIVE_AI_API_KEY`
-5. Value: Your Google AI API key
-6. Click **Add secret**
-
-The validation script will check that this environment variable is set before starting the server.
-
-### Running in Codespaces
+You can specify allowed directories as command-line arguments:
 
 ```bash
-# Validate environment (checks API key)
-pnpm run validate-env
-
-# Development mode (watch + run)
-pnpm run dev    # Terminal 1: Watch for changes
-pnpm start      # Terminal 2: Start the server
-
-# Or build and start in one command
-pnpm run dev:full
+node dist/index.js /path/to/workspace /home/user/documents
 ```
 
-### Testing with MCP Inspector
+Without arguments, file tools will allow access to all paths (for development).
 
-The [MCP Inspector](https://github.com/modelcontextprotocol/inspector) is a visual tool for testing MCP servers:
+## Available Tools
 
-```bash
-npx @modelcontextprotocol/inspector node dist/index.js
+### File & Code Tools
+
+#### read_file
+Read file contents with encoding support.
+
+**Parameters:**
+- `path` (string, required): File path to read
+- `encoding` (string, optional): "utf8" | "utf-16le" | "latin1" (default: "utf8")
+
+**Example:**
+```json
+{
+  "path": "/path/to/file.txt",
+  "encoding": "utf8"
+}
 ```
 
-This will launch a web interface where you can test the `summarize` tool and `greeting` resource.
+#### write_file
+Create or overwrite files.
 
-### VS Code Integration
+**Parameters:**
+- `path` (string, required): File path to write
+- `content` (string, required): Content to write
+- `encoding` (string, optional): "utf8" | "utf-16le" | "latin1" (default: "utf8")
+- `createDirectories` (boolean, optional): Auto-create parent directories (default: false)
 
-The Codespace comes pre-configured with:
+**Example:**
+```json
+{
+  "path": "/path/to/file.txt",
+  "content": "Hello, World!",
+  "createDirectories": true
+}
+```
 
-- **Tasks** (Ctrl/Cmd + Shift + B):
-  - Build: Compile TypeScript
-  - Watch: Watch for changes and recompile
-  - Start Server: Build and start the MCP server
-  - Validate Environment: Check required secrets
+#### list_directory
+List files and directories.
 
-- **Debug Configuration** (F5):
-  - Run MCP Server: Launch the server with debugger attached
+**Parameters:**
+- `path` (string, required): Directory path to list
+- `includeHidden` (boolean, optional): Include hidden files (default: false)
+- `recursive` (boolean, optional): List recursively (default: false)
 
-### Troubleshooting
+**Example:**
+```json
+{
+  "path": "/path/to/dir",
+  "includeHidden": false,
+  "recursive": true
+}
+```
 
-**Server won't start:**
-- Verify `GOOGLE_GENERATIVE_AI_API_KEY` is set in Codespaces secrets
-- Check the build completed: `ls -la dist/index.js`
-- Run validation manually: `pnpm run validate-env`
+#### search_files
+Search files using glob patterns.
 
-**Build errors:**
-- Clean rebuild: `rm -rf dist && pnpm run build`
-- Check Node.js version: `node --version` (should be 20+)
-- Ensure dependencies installed: `pnpm install`
+**Parameters:**
+- `path` (string, required): Root search path
+- `pattern` (string, required): Glob pattern (e.g., "*.ts", "**/*.js")
+- `excludePatterns` (array, optional): Patterns to exclude
 
-## Usage with Desktop App
+**Example:**
+```json
+{
+  "path": "/src",
+  "pattern": "**/*.ts",
+  "excludePatterns": ["**/node_modules/**", "**/dist/**"]
+}
+```
 
-To integrate this server with a desktop app, add the following to your app's server configuration:
+### Web & API Tools
 
-```js
+#### fetch_url
+Make HTTP requests to URLs.
+
+**Parameters:**
+- `url` (string, required): URL to fetch
+- `method` (string, optional): "GET" | "POST" | "PUT" | "DELETE" | "PATCH" (default: "GET")
+- `headers` (object, optional): HTTP headers
+- `body` (string, optional): Request body
+- `timeout` (number, optional): Timeout in milliseconds (default: 30000)
+- `followRedirects` (boolean, optional): Follow HTTP redirects (default: true)
+
+**Example:**
+```json
+{
+  "url": "https://api.example.com/data",
+  "method": "GET",
+  "headers": {
+    "Authorization": "Bearer token"
+  },
+  "timeout": 10000
+}
+```
+
+#### scrape_html
+Extract content from HTML pages.
+
+**Parameters:**
+- `url` (string, required): URL to scrape
+- `extractText` (boolean, optional): Extract text content (default: true)
+- `extractLinks` (boolean, optional): Extract links (default: false)
+- `extractImages` (boolean, optional): Extract images (default: false)
+
+**Example:**
+```json
+{
+  "url": "https://example.com",
+  "extractText": true,
+  "extractLinks": true,
+  "extractImages": true
+}
+```
+
+### Developer Tools
+
+#### git_status
+Get git repository status.
+
+**Parameters:**
+- `path` (string, optional): Repository path (default: ".")
+
+**Example:**
+```json
+{
+  "path": "."
+}
+```
+
+#### git_log
+Get git commit history.
+
+**Parameters:**
+- `path` (string, optional): Repository path (default: ".")
+- `maxCount` (number, optional): Maximum commits to return (default: 10)
+
+**Example:**
+```json
+{
+  "path": ".",
+  "maxCount": 20
+}
+```
+
+#### git_diff
+Get git diff output.
+
+**Parameters:**
+- `path` (string, optional): Repository path (default: ".")
+- `cached` (boolean, optional): Show staged changes (default: false)
+
+**Example:**
+```json
+{
+  "path": ".",
+  "cached": false
+}
+```
+
+#### system_info
+Get system information.
+
+**Parameters:**
+- `include` (array, optional): Categories to include: "platform" | "memory" | "cpu" | "uptime"
+
+**Example:**
+```json
+{
+  "include": ["platform", "memory", "cpu"]
+}
+```
+
+#### get_time
+Get current time with timezone support.
+
+**Parameters:**
+- `timezone` (string, optional): Timezone (e.g., "America/New_York")
+- `format` (string, optional): "iso" | "unix" | "locale" (default: "iso")
+
+**Example:**
+```json
+{
+  "timezone": "America/New_York",
+  "format": "locale"
+}
+```
+
+### AI Tools
+
+#### summarize
+Summarize text using Google's Gemini 1.5 Pro.
+
+**Parameters:**
+- `text` (string, required): Text to summarize
+- `maxLength` (number, optional): Maximum summary length in characters (default: 200)
+- `language` (string, optional): Target language (default: "en")
+
+**Example:**
+```json
+{
+  "text": "Long text to summarize...",
+  "maxLength": 100,
+  "language": "en"
+}
+```
+
+**Note:** Requires `GOOGLE_GENERATIVE_AI_API_KEY` environment variable. Get your key at https://ai.google.dev/
+
+## Resources
+
+### greeting
+Dynamic greeting resource.
+- URI format: `greeting://{name}`
+- Returns: Personalized greeting message
+
+### server-info
+Server information and capabilities.
+- URI format: `server-info://`
+- Returns: Server version, allowed directories, and available tools
+
+## Usage with Claude Desktop
+
+To integrate this server with Claude Desktop, add the following to your Claude Desktop config:
+
+**On macOS:** `~/Library/Application Support/Claude/claude_desktop_config.json`
+**On Windows:** `%APPDATA%\Claude\claude_desktop_config.json`
+
+```json
 {
   "mcpServers": {
-    "content-summarizer": {
+    "personal-assistant": {
       "command": "node",
       "args": [
-        "{ABSOLUTE PATH TO FILE HERE}/dist/index.js"
-      ]
+        "/absolute/path/to/personal-mcp-server/dist/index.js",
+        "/Users/yourname/workspace",
+        "/Users/yourname/documents"
+      ],
+      "env": {
+        "GOOGLE_GENERATIVE_AI_API_KEY": "your-api-key-here"
+      }
     }
   }
 }
 ```
 
-## Available Tools
+Replace the paths with your actual directories and API key.
 
-### summarize
+## Development
 
-Summarizes content from various sources using the following parameters:
-- `content` (string | object): The input content to summarize. Can be:
-  - Text string
-  - URL for web pages
-  - Base64 encoded PDF
-  - EPUB file content
-- `type` (string): Content type ("text", "url", "pdf", "epub")
-- `maxLength` (number, optional): Maximum length of the summary in characters (default: 200)
-- `language` (string, optional): Target language for the summary (default: "en")
-- `focus` (string, optional): Specific aspect to focus on in the summary
-- `style` (string, optional): Summary style ("concise", "detailed", "bullet-points")
+- Use `npm run dev` to start the TypeScript compiler in watch mode
+- Modify files in `src/tools/` to add or customize tools
+- Add new tool categories by creating new files in `src/tools/`
 
-Example usage:
+### Project Structure
 
-```typescript
-// Summarize a webpage
-const result = await server.invoke("summarize", {
-  content: "https://example.com/article",
-  type: "url",
-  maxLength: 300,
-  style: "bullet-points"
-});
-
-// Summarize a PDF document
-const result = await server.invoke("summarize", {
-  content: pdfBase64Content,
-  type: "pdf",
-  language: "zh",
-  style: "detailed"
-});
+```
+src/
+├── index.ts                 # Main entry point
+├── tools/
+│   ├── file-tools.ts        # File operations
+│   ├── web-tools.ts         # Web/API tools
+│   ├── dev-tools.ts         # Developer tools
+│   └── summarize-tool.ts    # AI summarization
+├── utils/
+│   ├── path-validation.ts   # Security utilities
+│   └── error-handling.ts    # Error handling
 ```
 
-### greeting
+## Testing with MCP Inspector
 
-A dynamic resource that demonstrates basic MCP resource functionality:
-- URI format: `greeting://{name}`
-- Returns a greeting message with the provided name
+The [MCP Inspector](https://github.com/modelcontextprotocol/inspector) is a visual tool for testing MCP servers:
+
+```bash
+npx @modelcontextprotocol/inspector node dist/index.js /allowed/path
+```
+
+## Security
+
+- File operations validate paths against allowed directories whitelist
+- Command injection prevention through argument arrays
+- Timeout protection on HTTP requests
+- No directory traversal attacks possible
+
+**Important:** Always specify allowed directories when running the server in production:
+
+```bash
+node dist/index.js /safe/workspace/directory
+```
 
 ## Contributing
 
@@ -185,4 +335,4 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details. 
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

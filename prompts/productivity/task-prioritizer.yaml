@@ -1,0 +1,70 @@
+id: task_prioritizer
+name: Task Prioritizer
+description: Prioritize a list of tasks based on impact and urgency
+category: productivity
+template: |
+  Please prioritize the following tasks:
+
+  {{#each tasks}}
+  - {{this}}
+  {{/each}}
+
+  {{#if criteria}}
+  Prioritization Criteria: {{criteria}}
+  {{/if}}
+
+  Sort the tasks into four quadrants:
+  1. URGENT & IMPORTANT (Do First)
+  2. IMPORTANT but NOT URGENT (Schedule)
+  3. URGENT but NOT IMPORTANT (Delegate)
+  4. NEITHER (Eliminate/Defer)
+
+  For each task, explain the reasoning for its placement.
+parameters:
+  - name: tasks
+    type: array
+    description: List of tasks to prioritize
+    required: true
+  - name: criteria
+    type: string
+    description: Custom prioritization criteria
+    required: false
+examples:
+  - inputs:
+      tasks:
+        - Respond to client email about contract renewal
+        - Prepare presentation for board meeting
+        - Organize desktop files
+        - Review team performance reports
+        - Schedule dentist appointment
+        - Update project roadmap
+        - Water the plants
+    output: |
+      URGENT & IMPORTANT (Do First):
+      1. Respond to client email about contract renewal
+         Reason: Time-sensitive, directly impacts revenue
+
+      2. Prepare presentation for board meeting
+         Reason: Deadline approaching, high-stakes audience
+
+      IMPORTANT but NOT URGENT (Schedule):
+      3. Update project roadmap
+         Reason: Strategic planning, no immediate deadline
+
+      4. Review team performance reports
+         Reason: Important for team growth, can be scheduled
+
+      URGENT but NOT IMPORTANT (Delegate):
+      5. Schedule dentist appointment
+         Reason: Urgent but administrative - can delegate to assistant
+
+      NEITHER (Eliminate/Defer):
+      6. Organize desktop files
+         Reason: Low impact, defer to downtime
+
+      7. Water the plants
+         Reason: Low impact, can be automated or delegated
+tags:
+  - prioritization
+  - productivity
+  - eisenhower-matrix

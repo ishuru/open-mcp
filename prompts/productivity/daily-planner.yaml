@@ -1,0 +1,72 @@
+id: daily_planner
+name: Daily Planner
+description: Generate a structured daily plan with priorities and time estimates
+category: productivity
+template: |
+  Create a daily plan for the following tasks:
+
+  {{#each tasks}}
+  - {{this}}
+  {{/each}}
+
+  {{#if context}}
+  Additional Context: {{context}}
+  {{/if}}
+
+  Available Hours: {{hours}}
+
+  Please organize these tasks by priority and estimate time for each. The plan should include:
+  1. High priority tasks (must complete today)
+  2. Medium priority tasks (should complete if time permits)
+  3. Low priority tasks (nice to have)
+
+  For each task, provide a time estimate and brief notes on execution approach.
+parameters:
+  - name: tasks
+    type: array
+    description: List of tasks to plan
+    required: true
+  - name: context
+    type: string
+    description: Additional context for planning (goals, constraints, etc.)
+    required: false
+  - name: hours
+    type: number
+    description: Available hours in the day
+    required: false
+    default: 8
+examples:
+  - inputs:
+      tasks:
+        - Write documentation for new feature
+        - Review pull requests
+        - Team standup meeting
+        - Fix critical bug in authentication
+      context: Focus on shipping the authentication feature
+      hours: 6
+    output: |
+      Daily Plan (6 hours available):
+
+      HIGH PRIORITY (Must Complete Today):
+      1. Fix critical bug in authentication (1.5h)
+         - Priority: Critical - blocking users
+         - Approach: Debug auth flow, add error handling
+
+      2. Write documentation for new feature (2h)
+         - Priority: High - unblocks team members
+         - Approach: Document API endpoints, usage examples
+
+      MEDIUM PRIORITY (Should Complete):
+      3. Review pull requests (1.5h)
+         - Priority: Medium - maintain code quality
+         - Approach: Focus on auth-related PRs first
+
+      LOW PRIORITY (Nice to Have):
+      4. Team standup meeting (1h)
+         - Can be async or skipped if time-constrained
+
+      Time allocated: 6 hours
+tags:
+  - planning
+  - productivity
+  - time-management
